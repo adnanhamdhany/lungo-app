@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Filter - Lungo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/filter.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+</head>
+<body>
+
+  {% include 'navbar.html' %}
+
+  <div class="container">
+    <div class="text-center">
+      <h1>Mau Kemana?</h1>
+      <p></p>
+    </div>
+
+    <div class="banner">
+      <div class="banner-content">
+        <form method="GET" action="{{ url_for('random_place') }}">
+          <button type="submit" class="btn-random">Wisata Random</button>
+        </form>
+      </div>
+      <!-- Jika mau gambar, bisa di sini -->
+      <!-- <div class="banner-image"><img src="..." alt="..."></div> -->
+    </div>
+
+
+    <form class="search-form" method="POST" action="{{ url_for('search') }}">
+      <input type="text" name="query" placeholder="Cari destinasi..." required>
+      <button type="submit">Search</button>
+    </form>
+
+    <div class="text-center">
+      <h1>Cari Pakai Filter</h1>
+      <p></p>
+    </div>
+
+    <form method="POST" class="filter-form">
+      <div class="filter-group">
+        <label for="kota">Kota Tujuan</label>
+        <select name="kota" id="kota" required>
+          <option value="">Pilih Kota</option>
+          <option>Jakarta</option>
+          <option>Bandung</option>
+          <option>Yogyakarta</option>
+          <option>Surabaya</option>
+          <option>Semarang</option>
+          <option>Medan</option>
+          <option>Makassar</option>
+          <option>Denpasar</option>
+          <option>Malang</option>
+          <option>Balikpapan</option>
+          <option>Batam</option>
+          <option>Bogor</option>
+          <option>Tangerang</option>
+          <option>Bekasi</option>
+          <option>Palembang</option>
+          <option>Pekanbaru</option>
+          <option>Padang</option>
+          <option>Samarinda</option>
+          <option>Banjarmasin</option>
+          <option>Pontianak</option>
+          <option>Manado</option>
+          <option>Jayapura</option>
+          <option>Mataram</option>
+          <option>Ambon</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="kategori">Kategori Tempat</label>
+        <select name="kategori" id="kategori" required>
+          <option value="">Pilih Kategori</option>
+          <option value="alam">Alam</option>
+          <option value="budaya">Budaya</option>
+          <option value="kuliner">Kuliner</option>
+          <option value="belanja">Belanja</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <button type="submit">Filter</button>
+      </div>
+    </form>
+  </div>
+
+</body>
+</html>

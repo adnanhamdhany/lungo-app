@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ destinasi.nama }} - Lungo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/detail.css') }}">
+</head>
+<body>
+
+  {% include 'navbar.html' %}
+
+  <div class="content">
+    <!-- Navigation Buttons -->
+    <div class="nav-buttons">
+      <a href="{{ url_for('detail', place_id=destinasi.id) }}" class="active">Detail</a>
+      <a href="{{ url_for('photo', place_id=destinasi.id) }}">Photo</a>
+      <a href="{{ url_for('location', place_id=destinasi.id) }}">Location</a>
+      <a href="{{ url_for('comments', place_id=destinasi.id) }}">Comments</a>
+    </div>
+
+    <!-- Foto Preview -->
+    {% if destinasi.foto_urls %}
+      <img src="{{ destinasi.foto_urls[0] }}" alt="Foto {{ destinasi.nama }}" class="image-preview">
+    {% else %}
+      <p class="no-photo">Tidak ada foto tersedia.</p>
+    {% endif %}
+
+    <!-- Detail Informasi -->
+    <h2 class="title">{{ destinasi.nama }}</h2>
+    <p class="description">Kategori: {{ destinasi.deskripsi }}</p>
+
+    <p class="address"><strong>Alamat:</strong> {{ destinasi.alamat }}</p>
+
+    <p class="rating">
+      <strong>Rating:</strong> ⭐ {{ destinasi.rating }}
+      <a href="https://www.google.com/maps/place/?q=place_id:{{ destinasi.id }}" target="_blank" rel="noopener">
+        (Lihat review di Google Maps)
+      </a>
+    </p>
+
+    <!-- Jam Buka -->
+    <div class="jam-buka-section">
+      <h5>Jam Buka:</h5>
+      {% if destinasi.buka_sekarang is not none %}
+        {% if destinasi.buka_sekarang %}
+          <p class="status open-now">Buka sekarang</p>
+        {% else %}
+          <p class="status closed-now">Tutup sekarang</p>
+        {% endif %}
+      {% endif %}
+
+      {% if destinasi.jam_buka %}
+        <div class="open-hours-list">
+          {% for line in destinasi.jam_buka %}
+            <p>{{ line }}</p>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p>Buka setiap hari</p>
+      {% endif %}
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <a href="https://www.google.com/maps/place/?q=place_id:{{ destinasi.id }}" target="_blank" class="btn-maps">Lihat di Google Maps</a>
+
+      {% if session.get('username') %}
+        <form method="POST" action="{{ url_for('add_wishlist') }}" class="wishlist-form">
+          <input type="hidden" name="place_id" value="{{ destinasi.id }}">
+          <input type="hidden" name="place_name" value="{{ destinasi.nama }}">
+          <input type="hidden" name="place_address" value="{{ destinasi.alamat }}">
+          <button type="submit" class="btn-wishlist">Tambah ke Wishlist</button>
+        </form>
+      {% endif %}
+    </div>
+
+  </div>
+
+</body>
+</html>

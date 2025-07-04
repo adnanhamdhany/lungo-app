@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wishlist Saya - Lungo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/wishlist.css') }}">
+</head>
+<body>
+
+  {% include 'navbar.html' %}
+
+  <div class="wishlist-container">
+    <h1>Wishlist Saya</h1>
+
+    {% if items %}
+      <div class="wishlist-list">
+        {% for item in items %}
+          <div class="wishlist-card">
+            <h3>
+              <a href="{{ url_for('detail', place_id=item.place_id) }}" class="place-link">
+                {{ item.place_name }}
+              </a>
+            </h3>
+            <p class="address">{{ item.place_address }}</p>
+            <p class="added">Ditambahkan: {{ item.created_at }}</p>
+            <form method="POST" action="{{ url_for('delete_wishlist', wishlist_id=item.id) }}" class="delete-form">
+              <button type="submit" class="delete-btn">Hapus</button>
+            </form>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty">Wishlist kosong.</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>

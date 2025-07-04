@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Foto - {{ destinasi.nama }} | Lungo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/photo.css') }}">
+</head>
+<body>
+
+  {% include 'navbar.html' %}
+
+  <div class="content">
+
+    <div class="nav-buttons">
+      <a href="{{ url_for('detail', place_id=destinasi.id) }}">Detail</a>
+      <a href="{{ url_for('photo', place_id=destinasi.id) }}" class="active">Photo</a>
+      <a href="{{ url_for('location', place_id=destinasi.id) }}">Location</a>
+      <a href="{{ url_for('comments', place_id=destinasi.id) }}">Comments</a>
+    </div>
+
+    <h2 class="title">Foto Tempat: {{ destinasi.nama }}</h2>
+
+    {% if destinasi.foto_urls %}
+      <div class="photo-grid">
+        {% for foto in destinasi.foto_urls %}
+          <div class="photo-item">
+            <img src="{{ foto }}" alt="Foto {{ destinasi.nama }}" onclick="showModal(this.src)">
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-photo">Tidak ada foto tersedia.</p>
+    {% endif %}
+
+    <a href="{{ url_for('detail', place_id=destinasi.id) }}" class="btn-back">Kembali ke Detail</a>
+  </div>
+
+  <!-- Modal -->
+  <div id="photoModal" class="modal" onclick="closeModal(event)">
+    <span class="close" onclick="closeModal(event)">&times;</span>
+    <img class="modal-content" id="modalImage">
+  </div>
+
+  <script>
+    function showModal(src) {
+      const modal = document.getElementById("photoModal");
+      const modalImg = document.getElementById("modalImage");
+      modal.style.display = "flex"; // FLEX agar center
+      modalImg.src = src;
+    }
+
+    function closeModal(event) {
+      if (event.target.classList.contains('modal') || event.target.classList.contains('close')) {
+        document.getElementById("photoModal").style.display = "none";
+      }
+    }
+  </script>
+
+
+</body>
+</html>

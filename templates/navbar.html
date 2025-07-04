@@ -1,0 +1,17 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+
+<nav class="navbar">
+  <a href="{{ url_for('home') }}" class="logo">
+    <img src="{{ url_for('static', filename='images/logo.png') }}" alt="LUNGO Logo" class="logo-img">
+  </a>
+  <div class="nav-links">
+    <a href="{{ url_for('home') }}">Home</a>
+
+    {% if session.get('username') %}
+      <a href="{{ url_for('wishlist') }}">Wishlist</a>
+      <a href="{{ url_for('logout') }}">Logout ({{ session['username'] }})</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+  </div>
+</nav>

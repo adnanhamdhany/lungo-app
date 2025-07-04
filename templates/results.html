@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hasil Destinasi - Lungo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/results.css') }}">
+</head>
+<body>
+
+  {% include 'navbar.html' %}
+
+  <div class="container">
+    <h2 class="results-title">Hasil Pencarian Destinasi</h2>
+
+    {% if destinasi %}
+      <div class="card-grid">
+      {% for d in destinasi %}
+        <div class="card">
+          {% if d.foto_urls %}
+            <img src="{{ d.foto_urls[0] }}" alt="Foto {{ d.nama }}" class="card-img">
+          {% endif %}
+          <div class="card-body">
+            <h5>{{ d.nama }}</h5>
+            <p class="alamat">{{ d.alamat }}</p>
+            <p class="rating">⭐ {{ d.rating }}</p>
+            <a href="{{ url_for('detail', place_id=d.id) }}" class="btn">Detail</a>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    {% else %}
+      <p class="no-results">Tidak ada destinasi ditemukan.</p>
+    {% endif %}
+  </div>
+
+</body>
+</html>

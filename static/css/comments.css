@@ -1,0 +1,126 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f9f9f9;
+}
+
+.content {
+  max-width: 800px;
+  margin: 10px auto 40px auto;
+  padding: 0 20px;
+}
+
+.nav-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 25px;
+  flex-wrap: wrap;
+}
+
+.nav-buttons a {
+  padding: 6px 14px;
+  background-color: #e0e0e0;
+  border-radius: 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.nav-buttons a:hover {
+  background-color: #7289DA;
+  color: #fff;
+}
+
+.nav-buttons a.active {
+  background-color: #7289DA;
+  color: white;
+  font-weight: bold;
+}
+
+.title {
+  font-size: 24px;
+  color: #222;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.comments-list {
+  margin-bottom: 25px;
+}
+
+.comment-item {
+  background-color: white;
+  padding: 12px 15px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px rgba(0,0,0,0.05);
+  margin-bottom: 12px;
+}
+
+.comment-item strong {
+  font-weight: 600;
+  color: #7289DA;
+}
+
+.comment-item .date {
+  color: #666;
+  font-size: 12px;
+  margin-left: 6px;
+}
+
+.comment-item p {
+  margin: 8px 0 0 0;
+  color: #333;
+}
+
+.comment-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 30px;
+}
+
+.comment-form textarea {
+  resize: vertical;
+  padding: 10px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-family: inherit;
+}
+
+.btn-submit {
+  width: max-content;
+  align-self: flex-end;
+  padding: 8px 20px;
+  background-color: #44ac80;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-submit:hover {
+  background-color: #44ac80;
+}
+
+.btn-back {
+  display: block;
+  width: max-content;
+  margin: 0 auto;
+  padding: 10px 18px;
+  background-color: #6c757d;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-back:hover {
+  background-color: #5a6268;
+}

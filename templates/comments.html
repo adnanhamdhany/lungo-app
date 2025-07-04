@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Komentar - {{ destinasi.nama }} | Lungo</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/comments.css') }}">
+</head>
+<body>
+
+  {% include 'navbar.html' %}
+
+  <div class="content">
+
+    <div class="nav-buttons">
+      <a href="{{ url_for('detail', place_id=destinasi.id) }}">Detail</a>
+      <a href="{{ url_for('photo', place_id=destinasi.id) }}">Photo</a>
+      <a href="{{ url_for('location', place_id=destinasi.id) }}">Location</a>
+      <a href="{{ url_for('comments', place_id=destinasi.id) }}" class="active">Comments</a>
+    </div>
+
+    <h2 class="title">Komentar untuk {{ destinasi.nama }}</h2>
+
+    <div class="comments-list">
+      {% for k in komentar %}
+        <div class="comment-item">
+          <strong>{{ k.username }}</strong> <span class="date">({{ k.tanggal }})</span>
+          <p>{{ k.komentar }}</p>
+        </div>
+      {% else %}
+        <p>Tidak ada komentar </p>
+        <p>(Login untuk menambahkan komentar)</p>
+      {% endfor %}
+    </div>
+
+    {% if session['username'] %}
+    <form method="POST" class="comment-form">
+      <textarea name="komentar" placeholder="Tulis komentar..." rows="3" required></textarea>
+      <button type="submit" class="btn-submit">Kirim</button>
+    </form>
+    {% endif %}
+
+    <a href="{{ url_for('detail', place_id=destinasi.id) }}" class="btn-back">Kembali ke Detail</a>
+  </div>
+
+</body>
+</html>
