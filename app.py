@@ -14,7 +14,7 @@ conn = mysql.connector.connect(
     port="3306",
     user="root",
     password="",
-    database="lungo_db"
+    database="lungo-db"
 )
 cursor = conn.cursor(dictionary=True)
 
