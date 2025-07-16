@@ -290,9 +290,9 @@ def search():
     else:
         query = request.args.get('query', '').strip()
 
-    if not query:
-        flash("Masukkan nama destinasi yang ingin dicari.")
-        return redirect(url_for('home'))
+    # if not query:
+    #     flash("Masukkan nama destinasi yang ingin dicari.")
+    #     return redirect(url_for('home'))
 
     search_url = (
         f"https://maps.googleapis.com/maps/api/place/textsearch/json"
