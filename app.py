@@ -3,20 +3,22 @@ import mysql.connector
 from datetime import datetime
 import requests
 import os
+import psycopg2
+from psycopg2.extras import RealDictCursor
 
 app = Flask(__name__)
 app.secret_key = 'rahasia_lungo'
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
-# Koneksi ke database MySQL
-conn = mysql.connector.connect(
-    host="34.142.240.31",
-    port="3306",
-    user="root",
-    password="",
-    database="lungo-db"
+conn = psycopg2.connect(
+    host=os.environ.get("SUPABASE_HOST"),
+    port=5432,
+    user=os.environ.get("SUPABASE_USER"),
+    password=os.environ.get("SUPABASE_PASSWORD"),
+    dbname=os.environ.get("SUPABASE_DBNAME"),
+    cursor_factory=RealDictCursor
 )
-cursor = conn.cursor(dictionary=True)
+cursor = conn.cursor()
 
 # Mapping tipe tempat Google Places ke deskripsi kategori
 type_descriptions = {
