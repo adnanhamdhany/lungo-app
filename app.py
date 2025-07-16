@@ -327,9 +327,9 @@ def search():
         })
         seen_place_ids.add(place_id)
 
-    if not destinasi:
-        flash("Tidak ditemukan hasil yang cocok.")
-        return redirect(url_for('home'))
+    # if not destinasi:
+    #     flash("Tidak ditemukan hasil yang cocok.")
+    #     return redirect(url_for('home'))
 
     return render_template('results.html', destinasi=destinasi, query=query)
 
