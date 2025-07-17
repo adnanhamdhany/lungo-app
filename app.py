@@ -15,7 +15,6 @@ GOOGLE_API_KEY = 'AIzaSyAbzz0kK9mYimlZGv4Zm1GLhmRdCDfPo3s'
 conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
 cursor = conn.cursor()
 
-# Mapping tipe tempat Google Places ke deskripsi kategori
 type_descriptions = {
     'restaurant': 'Kuliner',
     'cafe': 'Kuliner',
