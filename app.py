@@ -180,8 +180,6 @@ def home():
     return render_template('filter.html')
 
 
-
-
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -393,7 +391,7 @@ def delete_wishlist(wishlist_id):
 @app.route('/random_place')
 def random_place():
     # Ambil data random dari DB
-    cursor.execute("SELECT * FROM wisata_random ORDER BY RAND() LIMIT 1")
+    cursor.execute("SELECT * FROM wisata_random ORDER BY RANDOM() LIMIT 1")
     tempat = cursor.fetchone()
 
     if not tempat:

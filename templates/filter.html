@@ -38,7 +38,7 @@
       <p></p>
     </div>
 
-    <form method="POST" class="filter-form">
+    <form method="POST" class="filter-form" action="{{ url_for('home') }}">
       <div class="filter-group">
         <label for="kota">Kota Tujuan</label>
         <select name="kota" id="kota" required>
@@ -85,6 +85,10 @@
         <button type="submit">Filter</button>
       </div>
     </form>
+
+    {% if error %}
+      <div class="error-message">{{ error }}</div>
+    {% endif %}
   </div>
 
 </body>
