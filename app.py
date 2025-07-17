@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 load_dotenv()                    
 
 app = Flask(__name__)
-app.secret_key = 'rahasia_lungo'
-GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+app.secret_key = 'uINS49ystT4h4zC27OuYOIHELXI'
+GOOGLE_API_KEY = 'AIzaSyAbzz0kK9mYimlZGv4Zm1GLhmRdCDfPo3s'
 
 conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
 cursor = conn.cursor()
