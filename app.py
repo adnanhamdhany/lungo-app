@@ -1,23 +1,18 @@
 from flask import Flask, render_template, request, redirect, session, url_for, flash, get_flashed_messages
-import mysql.connector
 from datetime import datetime
 import requests
 import os
 import psycopg2
 from psycopg2.extras import RealDictCursor
+from dotenv import load_dotenv  
+
+load_dotenv()                    
 
 app = Flask(__name__)
 app.secret_key = 'rahasia_lungo'
 GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
 
-conn = psycopg2.connect(
-    host=os.environ.get("SUPABASE_HOST"),
-    port=5432,
-    user=os.environ.get("SUPABASE_USER"),
-    password=os.environ.get("SUPABASE_PASSWORD"),
-    dbname=os.environ.get("SUPABASE_DBNAME"),
-    cursor_factory=RealDictCursor
-)
+conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
 cursor = conn.cursor()
 
 # Mapping tipe tempat Google Places ke deskripsi kategori
