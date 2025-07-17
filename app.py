@@ -71,11 +71,16 @@ def get_destinasi(place_id):
     }
 
 def get_komentar(place_id):
+    conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+    cursor = conn.cursor()
     cursor.execute(
         "SELECT k.komentar, k.tanggal, u.username FROM komentar k JOIN users u ON k.user_id = u.id WHERE k.place_id = %s ORDER BY k.tanggal DESC",
         (place_id,)
     )
-    return cursor.fetchall()
+    result = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return result
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -185,11 +190,15 @@ def register():
         username = request.form['username']
         email = request.form['email']
         password = request.form['password']
+        conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)",
             (username, email, password)
         )
         conn.commit()
+        cursor.close()
+        conn.close()
         return redirect('/login')
     return render_template('register.html')
 
@@ -199,12 +208,15 @@ def login():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-
+        conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
         cursor.execute(
             "SELECT * FROM users WHERE username=%s AND password=%s",
             (username, password)
         )
         user = cursor.fetchone()
+        cursor.close()
+        conn.close()
         if user:
             session['username'] = user['username']
             session['user_id'] = user['id']
@@ -224,17 +236,19 @@ def logout():
 @app.route('/detail/<place_id>', methods=['GET', 'POST'])
 def detail(place_id):
     destinasi = get_destinasi(place_id)
-
     if request.method == 'POST' and 'username' in session:
         komentar = request.form['komentar']
         user_id = session['user_id']
         tanggal = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+        cursor = conn.cursor()
         cursor.execute(
             "INSERT INTO komentar (user_id, place_id, komentar, tanggal) VALUES (%s, %s, %s, %s)",
             (user_id, place_id, komentar, tanggal)
         )
         conn.commit()
-
+        cursor.close()
+        conn.close()
     komentar = get_komentar(place_id)
     return render_template('detail.html', destinasi=destinasi, komentar=komentar)
 
@@ -257,21 +271,23 @@ def comments(place_id):
         if 'username' not in session or 'user_id' not in session:
             flash("Anda harus login untuk mengirim komentar.")
             return redirect(url_for('login'))
-
         komentar_baru = request.form.get('komentar', '').strip()
         if komentar_baru:
             tanggal = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             user_id = session['user_id']
+            conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+            cursor = conn.cursor()
             cursor.execute(
                 "INSERT INTO komentar (user_id, place_id, komentar, tanggal) VALUES (%s, %s, %s, %s)",
                 (user_id, place_id, komentar_baru, tanggal)
             )
             conn.commit()
+            cursor.close()
+            conn.close()
             flash("Komentar berhasil dikirim!")
         else:
             flash("Komentar tidak boleh kosong.")
         return redirect(url_for('comments', place_id=place_id))
-
     komentar = get_komentar(place_id)
     destinasi = get_destinasi(place_id)
     return render_template('comments.html', destinasi=destinasi, komentar=komentar, messages=get_flashed_messages())
@@ -333,13 +349,15 @@ def wishlist():
     if 'user_id' not in session:
         flash("Anda harus login untuk melihat wishlist.")
         return redirect(url_for('login'))
-
+    conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+    cursor = conn.cursor()
     cursor.execute(
         "SELECT * FROM wishlist WHERE user_id = %s",
         (session['user_id'],)
     )
     items = cursor.fetchall()
-
+    cursor.close()
+    conn.close()
     return render_template('wishlist.html', items=items)
 
 @app.route('/add_wishlist', methods=['POST'])
@@ -347,12 +365,11 @@ def add_wishlist():
     if 'user_id' not in session:
         flash("Anda harus login untuk menambahkan ke wishlist.")
         return redirect(url_for('login'))
-
     place_id = request.form['place_id']
     place_name = request.form['place_name']
     place_address = request.form['place_address']
-
-    # Cek duplikat
+    conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+    cursor = conn.cursor()
     cursor.execute(
         "SELECT * FROM wishlist WHERE user_id = %s AND place_id = %s",
         (session['user_id'], place_id)
@@ -367,31 +384,36 @@ def add_wishlist():
         )
         conn.commit()
         flash("Berhasil ditambahkan ke wishlist!")
-
+    cursor.close()
+    conn.close()
     return redirect(url_for('wishlist'))
-
-
 
 @app.route('/wishlist/delete/<int:wishlist_id>', methods=['POST'])
 def delete_wishlist(wishlist_id):
     if 'user_id' not in session:
         flash("Anda harus login untuk menghapus dari wishlist.")
         return redirect(url_for('login'))
-
+    conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+    cursor = conn.cursor()
     cursor.execute(
         "DELETE FROM wishlist WHERE id = %s AND user_id = %s",
         (wishlist_id, session['user_id'])
     )
     conn.commit()
+    cursor.close()
+    conn.close()
     flash("Wishlist berhasil dihapus.")
     return redirect(url_for('wishlist'))
 
 
 @app.route('/random_place')
 def random_place():
-    # Ambil data random dari DB
+    conn = psycopg2.connect(os.environ.get("SUPABASE_DB_URL"), cursor_factory=RealDictCursor)
+    cursor = conn.cursor()
     cursor.execute("SELECT * FROM wisata_random ORDER BY RANDOM() LIMIT 1")
     tempat = cursor.fetchone()
+    cursor.close()
+    conn.close()
 
     if not tempat:
         flash("Belum ada data random wisata.")
