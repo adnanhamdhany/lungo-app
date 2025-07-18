@@ -4,6 +4,7 @@ import requests
 import os
 from dotenv import load_dotenv
 from supabase import create_client, Client
+import random
 
 load_dotenv()
 
@@ -57,6 +58,7 @@ def get_komentar(place_id):
     data = supabase.from_('komentar').select('komentar,tanggal,users(username)').eq('place_id', place_id).order('tanggal', desc=True).execute()
     return data.data
 
+
 @app.route('/', methods=['GET', 'POST'])
 def home():
     if request.method == 'POST':
@@ -94,7 +96,7 @@ def home():
             destinasi.append({
                 'nama': place.get('name'),
                 'alamat': place.get('formatted_address'),
-                'rating': place.get('rating'),
+                'rating': place.get('rating'),  # <-- perbaiki di sini
                 'id': place_id,
                 'foto_urls': foto_urls
             })
@@ -120,7 +122,31 @@ def home():
                 })
                 seen_place_ids.add(place_id)
         return render_template('results.html', destinasi=destinasi)
-    return render_template('filter.html')
+
+    # Ambil semua data dari wisata_random
+    all_places = supabase.from_('wisata_random').select('*').execute().data
+    random_cards = []
+    if all_places and len(all_places) >= 3:
+        sample_places = random.sample(all_places, 3)
+    elif all_places:
+        sample_places = all_places
+    else:
+        sample_places = []
+
+    for tempat in sample_places:
+        place_id = tempat['place_id']
+        detail_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={place_id}&fields=name,rating,formatted_address,photos,geometry,types,opening_hours&key={GOOGLE_API_KEY}"
+        response = requests.get(detail_url).json()
+        result_g = response.get('result', {})
+        foto_urls = [get_photo_url(photo.get('photo_reference')) for photo in result_g.get('photos', []) if photo.get('photo_reference')]
+        random_cards.append({
+            'id': place_id,
+            'nama': result_g.get('name'),
+            'alamat': result_g.get('formatted_address'),
+            'rating': result_g.get('rating'),
+            'foto_urls': foto_urls
+        })
+    return render_template('filter.html', random_cards=random_cards)
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -198,33 +224,29 @@ def delete_wishlist(wishlist_id):
 
 @app.route('/random_place')
 def random_place():
-    result = supabase.from_('wisata_random').select('*').order('id', desc=False).limit(1).execute()
-    tempat = result.data[0] if result.data else None
-    if not tempat:
-        flash("Belum ada data random wisata.")
+    # Ambil semua data dari tabel wisata_random
+    all_places = supabase.from_('wisata_random').select('*').execute().data
+    if not all_places:
+        flash("Belum ada data wisata random.")
         return redirect(url_for('home'))
+    # Pilih satu tempat secara acak
+    tempat = random.choice(all_places)
     place_id = tempat['place_id']
-    # Ambil detail dari Google
-    detail_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={place_id}&fields=name,rating,formatted_address,geometry,photos,types,opening_hours&key={GOOGLE_API_KEY}"
+    # Ambil detail lengkap dari Google Places API
+    detail_url = f"https://maps.googleapis.com/maps/api/place/details/json?place_id={place_id}&fields=name,rating,formatted_address,photos,geometry,types,opening_hours&key={GOOGLE_API_KEY}"
     response = requests.get(detail_url).json()
-    result_g = response.get('result', {})
-    types = result_g.get('types', [])
-    kategori_db = tempat.get('kategori')
-    kategori_mapped = next((type_descriptions[t] for t in types if t in type_descriptions), 'Tempat')
-    kategori = kategori_db if kategori_db else kategori_mapped
-    deskripsi = tempat.get('deskripsi') if tempat.get('deskripsi') else kategori
-    opening_hours = result_g.get('opening_hours', {})
-    jam_buka = opening_hours.get('weekday_text', ["Buka setiap hari"])
-    buka_sekarang = opening_hours.get('open_now')
-    foto_urls = [get_photo_url(photo.get('photo_reference')) for photo in result_g.get('photos', []) if photo.get('photo_reference')]
+    result = response.get('result', {})
+    deskripsi = next((type_descriptions[t] for t in result.get('types', []) if t in type_descriptions), 'Tempat')
+    foto_urls = [get_photo_url(p.get('photo_reference')) for p in result.get('photos', []) if p.get('photo_reference')]
+    jam_buka = result.get('opening_hours', {}).get('weekday_text', [])
+    buka_sekarang = result.get('opening_hours', {}).get('open_now', None)
     destinasi = {
         'id': place_id,
-        'nama': result_g.get('name'),
-        'alamat': result_g.get('formatted_address'),
-        'rating': result_g.get('rating'),
-        'lokasi': result_g.get('geometry', {}).get('location'),
+        'nama': result.get('name'),
+        'alamat': result.get('formatted_address'),
+        'rating': result.get('rating'),
+        'lokasi': result.get('geometry', {}).get('location'),
         'deskripsi': deskripsi,
-        'kategori': kategori,
         'foto_urls': foto_urls,
         'jam_buka': jam_buka,
         'buka_sekarang': buka_sekarang

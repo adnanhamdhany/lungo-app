@@ -18,6 +18,7 @@
     </div>
 
     <div class="banner">
+
       <div class="banner-content">
         <form method="GET" action="{{ url_for('random_place') }}">
           <button type="submit" class="btn-random">Wisata Random</button>
@@ -26,6 +27,19 @@
       <!-- Jika mau gambar, bisa di sini -->
       <!-- <div class="banner-image"><img src="..." alt="..."></div> -->
     </div>
+
+    <!-- <div class="app-description">
+      <p><strong>LUNGO</strong> adalah website yang kami buat untuk membantu siapa saja menemukan tempat liburan yang pas dengan selera mereka.<br>
+      Caranya gampang banget: Anda tinggal pilih mau liburan ke kota mana dan suka wisata jenis apa misalnya kuliner, alam, atau budaya, nanti LUNGO akan langsung menampilkan rekomendasi tempat yang relevan.</p>
+      <p>Pengembangan aplikasi LUNGO bertujuan untuk memberikan kemudahan bagi para pelancong dalam menemukan rekomendasi destinasi wisata yang sesuai dengan kota tujuan dan kategori tempat yang diinginkan. Dengan menghadirkan sistem pencarian yang terstruktur dan responsif, aplikasi ini diharapkan mampu membantu pengguna merencanakan perjalanan dengan lebih cepat, tepat, dan sesuai dengan minat mereka.</p>
+      <ul style="margin-top:18px; margin-bottom:0; padding-left:22px;">
+        <li><b>Menyediakan Informasi Lengkap dan Akurat:</b> Memberikan detail penting mengenai setiap tempat wisata, seperti lokasi, jam operasional, harga tiket masuk, fasilitas yang tersedia, serta deskripsi singkat yang menarik.</li>
+        <li><b>Memberikan Rekomendasi Terkurasi:</b> Memudahkan pengguna dalam menemukan destinasi yang sesuai dengan minat mereka melalui sistem kategori yang jelas, seperti Kuliner, Hiburan, Pendidikan, Alam, Sejarah, dan lain-lain.</li>
+        <li><b>Mempermudah Perencanaan Perjalanan:</b> Membantu pengguna merencanakan agenda perjalanan mereka dengan efisien dengan menyajikan berbagai pilihan wisata dalam satu platform yang mudah dinavigasi.</li>
+        <li><b>Mempromosikan Potensi Wisata Lokal:</b> Mengenalkan destinasi-destinasi wisata yang mungkin belum banyak diketahui (hidden gems) di berbagai kota, sehingga dapat membantu meningkatkan kunjungan dan perekonomian lokal.</li>
+        <li><b>Membangun Antarmuka yang Intuitif:</b> Menciptakan pengalaman pengguna (User Experience) yang nyaman dan mudah, sehingga informasi dapat ditemukan dengan cepat tanpa hambatan teknis.</li>
+      </ul>
+    </div> -->
 
 
     <form class="search-form" method="POST" action="{{ url_for('search') }}">
@@ -89,6 +103,22 @@
     {% if error %}
       <div class="error-message">{{ error }}</div>
     {% endif %}
+
+    <!-- <div class="bottom-forms-row">
+      {% for card in random_cards %}
+      <form action="{{ url_for('detail', place_id=card.id) }}" method="get" style="padding:0;">
+        <div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;">
+          {% if card.foto_urls and card.foto_urls[0] %}
+            <img src="{{ card.foto_urls[0] }}" alt="{{ card.nama }}" style="width:90%;height:120px;object-fit:cover;border-radius:8px;margin-top:18px;" loading="lazy">
+          {% endif %}
+          <div style="margin:18px 0 8px 0;font-weight:bold;font-size:1.1em;">{{ card.nama }}</div>
+          <div style="color:#666;font-size:0.98em;margin-bottom:8px;text-align:center;">{{ card.alamat }}</div>
+          <div style="color:#f39c12;font-size:1em;margin-bottom:8px;">⭐ {{ card.rating or '-' }}</div>
+          <button type="submit" class="btn-detail" style="margin-top:auto;">Lihat Detail</button>
+        </div>
+      </form>
+      {% endfor %}
+    </div> -->
   </div>
 
 </body>
