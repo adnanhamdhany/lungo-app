@@ -108,17 +108,19 @@ body {
   display: inline-block;
   margin-top: 25px;
   padding: 8px 16px;
-  background-color: grey;
-  color: white;
+  background-color: #1e90ff; /* ganti sesuai warna navbar */
+  color: #fff;
   text-decoration: none;
+  border: none;              /* hilangkan border */
   border-radius: 6px;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 600;
   transition: background-color 0.3s ease;
+  cursor: pointer;
 }
 
 .btn-maps:hover {
-  background-color: #7289DA;
+  background-color: #176dc1;
 }
 
 .no-photo {
@@ -131,15 +133,16 @@ body {
   display: inline-block;
   margin-top: 20px;
   padding: 8px 16px;
-  background-color: grey;
-  color: white;
-  text-decoration: none;
+  background-color: #1e90ff; /* ganti sesuai warna navbar */
+  color: #fff;
+  border: none;
   border-radius: 6px;
   font-size: 13px;
-  font-weight: 500;
-  transition: background-color 0.3s ease;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
 }
 
 .btn-wishlist:hover {
-  background-color: #7289DA;
+  background-color: #176dc1; /* warna hover, opsional */
 }
